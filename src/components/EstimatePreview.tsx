@@ -17,12 +17,24 @@ export default function EstimatePreview({
 
   useEffect(() => {
     let cancelled = false;
+    let timeoutId: NodeJS.Timeout;
+    
     async function run() {
       if (!pickup || !dropoff) return;
       setLoading(true);
       setError(null);
+      
+      // Add timeout to prevent hanging requests
+      timeoutId = setTimeout(() => {
+        if (!cancelled) {
+          setError('Request timeout. Please try again.');
+          setLoading(false);
+        }
+      }, 10000); // 10 second timeout
+      
       try {
         const res = await gmMatrix(pickup, dropoff, "driving");
+        clearTimeout(timeoutId);
         const el = res?.rows?.[0]?.elements?.[0];
         if (!el || el.status !== "OK") throw new Error("No route");
         const meters = el.distance?.value ?? 0;
@@ -33,6 +45,7 @@ export default function EstimatePreview({
           setEtaMin(Math.round(secs / 60));
         }
       } catch (e: any) {
+        clearTimeout(timeoutId);
         if (!cancelled) {
           console.error('EstimatePreview error:', e);
           setError(e.message || "Failed to get ETA");
@@ -44,6 +57,7 @@ export default function EstimatePreview({
     run();
     return () => {
       cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [pickup, dropoff]);
 

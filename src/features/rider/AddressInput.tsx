@@ -180,12 +180,21 @@ const AddressInput: React.FC<AddressInputProps> = ({
               value={pickupInput}
               onChange={(e) => handlePickupInputChange(e.target.value)}
               onFocus={() => setActiveField('pickup')}
+              aria-label="Pickup location"
+              aria-describedby="pickup-help"
+              aria-expanded={activeField === 'pickup' && pickupSuggestions.length > 0}
+              aria-autocomplete="list"
+              role="combobox"
               className="w-full pl-11 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
               placeholder="Pickup location"
             />
+            <div id="pickup-help" className="sr-only">
+              Enter your pickup location. Suggestions will appear as you type.
+            </div>
             {pickupInput && (
               <button
                 onClick={clearPickup}
+                aria-label="Clear pickup location"
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
               >
                 <X className="h-4 w-4 text-gray-400" />
@@ -195,11 +204,17 @@ const AddressInput: React.FC<AddressInputProps> = ({
           
           {/* Pickup Suggestions */}
           {activeField === 'pickup' && pickupSuggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto">
+            <div 
+              className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto"
+              role="listbox"
+              aria-label="Pickup location suggestions"
+            >
               {pickupSuggestions.map((suggestion, index) => (
                 <button
                   key={index}
                   onClick={() => handlePickupSelect(suggestion)}
+                  role="option"
+                  aria-selected={false}
                   className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0 flex items-center space-x-3"
                 >
                   <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
@@ -215,6 +230,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
           <button
             onClick={handleSwap}
             disabled={!pickup && !dropoff}
+            aria-label="Swap pickup and destination locations"
             className="p-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-full transition-colors"
           >
             <ArrowUpDown className="h-4 w-4 text-gray-600" />
@@ -230,12 +246,21 @@ const AddressInput: React.FC<AddressInputProps> = ({
               value={dropoffInput}
               onChange={(e) => handleDropoffInputChange(e.target.value)}
               onFocus={() => setActiveField('dropoff')}
+              aria-label="Destination"
+              aria-describedby="dropoff-help"
+              aria-expanded={activeField === 'dropoff' && dropoffSuggestions.length > 0}
+              aria-autocomplete="list"
+              role="combobox"
               className="w-full pl-11 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
               placeholder="Where are you going?"
             />
+            <div id="dropoff-help" className="sr-only">
+              Enter your destination. Suggestions will appear as you type.
+            </div>
             {dropoffInput && (
               <button
                 onClick={clearDropoff}
+                aria-label="Clear destination"
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
               >
                 <X className="h-4 w-4 text-gray-400" />
@@ -245,11 +270,17 @@ const AddressInput: React.FC<AddressInputProps> = ({
           
           {/* Dropoff Suggestions */}
           {activeField === 'dropoff' && dropoffSuggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto">
+            <div 
+              className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto"
+              role="listbox"
+              aria-label="Destination suggestions"
+            >
               {dropoffSuggestions.map((suggestion, index) => (
                 <button
                   key={index}
                   onClick={() => handleDropoffSelect(suggestion)}
+                  role="option"
+                  aria-selected={false}
                   className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0 flex items-center space-x-3"
                 >
                   <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />

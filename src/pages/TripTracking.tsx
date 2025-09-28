@@ -30,25 +30,30 @@ const TripTracking: React.FC = () => {
 
         // If we have a quoteId but no tripId, confirm the quote first
         if (quoteId && !tripIdFromUrl) {
-          const { data: tripData, error: confirmError } = await supabase
-            .rpc('app.confirm_trip_from_quote', { p_quote_id: quoteId });
+          try {
+            const { data: tripData, error: confirmError } = await supabase
+              .rpc('app.confirm_trip_from_quote', { p_quote_id: quoteId });
 
-          if (confirmError) {
-            if (confirmError.message?.includes('expired')) {
-              setError('Quote has expired. Please request a new quote.');
-              setTimeout(() => navigate('/'), 3000);
-              return;
+            if (confirmError) {
+              if (confirmError.message?.includes('expired')) {
+                setError('Quote has expired. Please request a new quote.');
+                setTimeout(() => navigate('/'), 3000);
+                return;
+              }
+              throw confirmError;
             }
-            throw confirmError;
-          }
 
-          currentTripId = tripData;
-          
-          // Update URL with trip ID
-          const newUrl = new URL(window.location.href);
-          newUrl.searchParams.set('tripId', currentTripId);
-          newUrl.searchParams.delete('quoteId');
-          window.history.replaceState({}, '', newUrl.toString());
+            currentTripId = tripData;
+            
+            // Update URL with trip ID
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set('tripId', currentTripId);
+            newUrl.searchParams.delete('quoteId');
+            window.history.replaceState({}, '', newUrl.toString());
+          } catch (rpcError) {
+            console.error('RPC call failed:', rpcError);
+            throw rpcError;
+          }
         }
 
         if (!currentTripId) {

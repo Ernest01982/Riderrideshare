@@ -13,11 +13,18 @@ const Payment: React.FC<PaymentProps> = ({ onBack, onPaymentComplete }) => {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
 
   const handlePayment = async () => {
+    if (isProcessing) return; // Prevent double-clicks
     setIsProcessing(true);
     // Front-end only: simulate 1s processing
-    await new Promise(r => setTimeout(r, 1000));
-    setIsProcessing(false);
-    onPaymentComplete();
+    try {
+      await new Promise(r => setTimeout(r, 1000));
+      onPaymentComplete();
+    } catch (error) {
+      console.error('Payment processing error:', error);
+      // In a real app, show error message to user
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (!state.quote || !state.pickup || !state.dropoff) {

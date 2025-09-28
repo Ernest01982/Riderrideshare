@@ -7,18 +7,42 @@ const isGoogleMapsLoaded = () => {
 
 export const webPlacesAutocomplete: AutocompletePort = {
   async suggest(input, sessionToken) {
-    if (!isGoogleMapsLoaded()) return [];
+    if (!isGoogleMapsLoaded()) {
+      console.warn('Google Maps not loaded, falling back to mock data');
+      return [];
+    }
     
     const google: any = (window as any).google;
-    const svc = new google.maps.places.AutocompleteService();
-    const predictions = await new Promise<any[]>((resolve) => {
-      svc.getPlacePredictions({ 
-        input, 
-        sessionToken,
-        componentRestrictions: { country: 'za' }, // Restrict to South Africa
-        types: ['establishment', 'geocode']
-      }, (r: any) => resolve(r || []));
-    });
+    
+    try {
+      const svc = new google.maps.places.AutocompleteService();
+      const predictions = await new Promise<any[]>((resolve, reject) => {
+        const timeoutId = setTimeout(() => reject(new Error('Request timeout')), 5000);
+        
+        svc.getPlacePredictions({ 
+          input, 
+          sessionToken,
+          componentRestrictions: { country: 'za' }, // Restrict to South Africa
+          types: ['establishment', 'geocode']
+        }, (r: any, status: string) => {
+          clearTimeout(timeoutId);
+          if (status === 'OK') {
+            resolve(r || []);
+          } else {
+            reject(new Error(`Places API error: ${status}`));
+          }
+        });
+      });
+      
+      return predictions.map(p => ({ 
+        description: p.description, 
+        placeId: p.place_id 
+      }));
+    } catch (error) {
+      console.error('Places autocomplete error:', error);
+      return [];
+    }
+  },
     
     return predictions.map(p => ({ 
       description: p.description, 

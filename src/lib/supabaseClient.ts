@@ -9,6 +9,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Add proper error handling for invalid environment variables
+if (!supabaseUrl.startsWith('https://') && !supabaseUrl.startsWith('http://')) {
+  console.error('Invalid Supabase URL format. Please check your VITE_SUPABASE_URL environment variable.');
+}
+
 export type Trip = {
   id: string;
   status: 'requested' | 'assigned' | 'driver_enroute' | 'arrived_pickup' | 'on_trip' | 'completed' | 'cancelled';

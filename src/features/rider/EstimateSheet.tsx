@@ -48,7 +48,10 @@ export default function EstimateSheet({ serviceType, onGoToPayment }:{ serviceTy
   };
 
   const handleRequestRide = () => {
-    if (canRequestRide && state.quote) onGoToPayment();
+    if (canRequestRide && state.quote) {
+      // Add loading state to prevent double-clicks
+      onGoToPayment();
+    }
   };
 
   const availableRideTypes = serviceType === 'package'

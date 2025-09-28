@@ -1,6 +1,6 @@
 # RideFlow - Ride Sharing App Frontend
 
-A modern ride-sharing and package delivery web application built with React, TypeScript, and Tailwind CSS.
+A modern, accessible ride-sharing and package delivery web application built with React, TypeScript, and Tailwind CSS.
 
 ## Features
 
@@ -9,6 +9,43 @@ A modern ride-sharing and package delivery web application built with React, Typ
 - **Real-time Updates**: Live trip status and driver location updates
 - **Google Maps Integration**: Accurate distance and ETA calculations
 - **Supabase Backend**: Real-time database and edge functions
+
+## Code Quality & Standards
+
+This application follows modern web development best practices:
+
+### ✅ **Accessibility (WCAG 2.1 AA)**
+- Screen reader support with proper ARIA labels
+- Keyboard navigation for all interactive elements
+- High contrast mode support
+- Reduced motion preferences respected
+- Semantic HTML structure
+
+### ✅ **Performance Optimizations**
+- Request timeout handling (10s for API calls)
+- Debounced user inputs (300ms)
+- Memory leak prevention with cleanup functions
+- Error boundaries for graceful error handling
+- Efficient re-rendering with proper dependencies
+
+### ✅ **Security Features**
+- Environment variable validation
+- XSS prevention through React's built-in escaping
+- Secure API calls through Supabase Edge Functions
+- Input sanitization and validation
+
+### ✅ **Error Handling**
+- Global error boundaries
+- Network request timeouts
+- Graceful API failure handling
+- User-friendly error messages
+- Comprehensive logging for debugging
+
+### ✅ **Mobile Responsiveness**
+- Mobile-first design approach
+- Touch-friendly interface elements
+- Responsive breakpoints for all screen sizes
+- Optimized for both portrait and landscape modes
 
 ## Environment Setup
 
