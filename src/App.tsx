@@ -46,9 +46,8 @@ function App() {
   const handleBackFromPayment = () => setCurrentView('rider');
 
   const handlePaymentComplete = () => {
-    // Navigate to trip tracking - in a real app, you'd get the quote ID from payment context
-    const mockQuoteId = 'mock-quote-' + Date.now();
-    window.location.href = `/trip?quoteId=${mockQuoteId}`;
+    // Navigate to trip tracking - trip ID will be set by payment completion
+    window.location.href = `/trip`;
   };
 
   return (

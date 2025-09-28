@@ -32,25 +32,11 @@ const TripTracking: React.FC = () => {
         // If we have a quoteId but no tripId, confirm the quote first
         if (quoteId && !tripIdFromUrl) {
           try {
-            const { data: tripData, error: confirmError } = await supabase
-              .rpc('app.confirm_trip_from_quote', { p_quote_id: quoteId });
-
-            if (confirmError) {
-              if (confirmError.message?.includes('expired')) {
-                setError('Quote has expired. Please request a new quote.');
-                setTimeout(() => navigate('/'), 3000);
-                return;
-              }
-              throw confirmError;
-            }
-
-            currentTripId = tripData;
-            
-            // Update URL with trip ID
-            const newUrl = new URL(window.location.href);
-            newUrl.searchParams.set('tripId', currentTripId);
-            newUrl.searchParams.delete('quoteId');
-            window.history.replaceState({}, '', newUrl.toString());
+            // In a real app, you would have a quote confirmation endpoint
+            // For now, we'll redirect to home since quotes are ephemeral in frontend
+            console.warn('Quote confirmation not implemented - quotes are frontend-only');
+            navigate('/');
+            return;
           } catch (rpcError) {
             console.error('RPC call failed:', rpcError);
             throw rpcError;
@@ -85,15 +71,35 @@ const TripTracking: React.FC = () => {
         // Dispatch the trip if it's still in requested status
         if (initialTrip.status === 'requested') {
           try {
-            const { data: mode, error: dispatchError } = await supabase
-              .rpc('app.dispatch_trip', { p_trip_id: currentTripId });
-
-            if (dispatchError) {
-              console.error('Dispatch error:', dispatchError);
-              setDispatchMode('manual'); // Fallback
-            } else {
-              setDispatchMode(mode);
-            }
+            // In a real app, you would have a dispatch system
+            // For now, we'll simulate auto dispatch
+            setDispatchMode('auto');
+            
+            // Simulate driver assignment after a delay
+            setTimeout(async () => {
+              const { error: updateError } = await supabase
+                .from('trips')
+                .update({ 
+                  status: 'assigned',
+                  driver_name: 'John Doe',
+                  driver_phone: '+27 12 345 6789',
+                  vehicle_make: 'Toyota',
+                  vehicle_model: 'Corolla',
+                  vehicle_registration: 'CA 123-456'
+                })
+                .eq('id', currentTripId);
+              
+              if (!updateError) {
+                // Add trip event
+                await supabase
+                  .from('trip_events')
+                  .insert({
+                    trip_id: currentTripId,
+                    event_type: 'driver_assigned',
+                    message: 'Driver assigned and en route to pickup location'
+                  });
+              }
+            }, 3000);
           } catch (dispatchErr) {
             console.error('Dispatch failed:', dispatchErr);
             setDispatchMode('manual'); // Fallback

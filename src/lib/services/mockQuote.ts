@@ -1,6 +1,8 @@
 import { QuotePort, Quote } from "../ports/quote";
 import { haversineKm } from "../utils/haversine";
 
+const enableMocks = import.meta.env.VITE_ENABLE_MOCKS === 'true';
+
 const SPEED_KMPH = 28; // city average
 const RATES = { 
   economy: { base: 12, perKm: 9.5, perMin: 1.6 }, 
@@ -12,6 +14,10 @@ const TAX = 0.15;
 
 export const mockQuote: QuotePort = {
   async getQuote({ origin, destination, rideType }) {
+    if (!enableMocks) {
+      throw new Error('Mock quotes disabled. Enable with VITE_ENABLE_MOCKS=true or configure real quote service.');
+    }
+    
     // Add realistic delay
     await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 400));
     

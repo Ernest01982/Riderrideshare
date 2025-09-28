@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Navigation, MapPin, CheckCircle } from 'lucide-react';
 import { useQuote } from '../features/rider/QuoteContext';
+import { supabase } from '../lib/supabaseClient';
 
 interface PaymentProps {
   onBack: () => void;
@@ -11,17 +12,45 @@ const Payment: React.FC<PaymentProps> = ({ onBack, onPaymentComplete }) => {
   const { state } = useQuote();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
+  const [error, setError] = useState<string | null>(null);
 
   const handlePayment = async () => {
     if (isProcessing) return; // Prevent double-clicks
     setIsProcessing(true);
-    // Front-end only: simulate 1s processing
+    
     try {
-      await new Promise(r => setTimeout(r, 1000));
+      // Create trip in database
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('Please log in to complete payment');
+      }
+
+      const { data: trip, error: tripError } = await supabase
+        .from('trips')
+        .insert({
+          user_id: user.id,
+          pickup_address: state.pickup!.description,
+          dropoff_address: state.dropoff!.description,
+          pickup_lat: state.pickup!.lat,
+          pickup_lng: state.pickup!.lng,
+          dropoff_lat: state.dropoff!.lat,
+          dropoff_lng: state.dropoff!.lng,
+          distance_km: state.quote!.distanceKm,
+          duration_min: state.quote!.durationMin,
+          amount: state.quote!.amount,
+          total_amount: state.quote!.amount,
+          status: 'requested',
+          payment_method: paymentMethod
+        })
+        .select()
+        .single();
+
+      if (tripError) throw tripError;
+
       onPaymentComplete();
     } catch (error) {
       console.error('Payment processing error:', error);
-      // In a real app, show error message to user
+      setError(error instanceof Error ? error.message : 'Payment failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -103,6 +132,13 @@ const Payment: React.FC<PaymentProps> = ({ onBack, onPaymentComplete }) => {
           </div>
           <p className="mt-3 text-xs text-gray-500">Front-end only: no real processing yet.</p>
         </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
+            <p className="text-sm text-red-700">{error}</p>
+          </div>
+        )}
 
         {/* Confirm & Pay */}
         <button
