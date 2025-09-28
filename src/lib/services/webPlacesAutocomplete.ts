@@ -43,12 +43,6 @@ export const webPlacesAutocomplete: AutocompletePort = {
       return [];
     }
   },
-    
-    return predictions.map(p => ({ 
-      description: p.description, 
-      placeId: p.place_id 
-    }));
-  },
   
   async resolve(place, sessionToken) {
     if (place.location) return place;
