@@ -250,6 +250,7 @@ const RideHistory: React.FC<RideHistoryProps> = ({ onBack }) => {
             ))}
           </div>
         </div>
+        )}
 
         {!loading && !error && trips.length === 0 && (
           <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
