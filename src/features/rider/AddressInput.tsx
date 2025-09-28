@@ -204,7 +204,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
             )}
             </div>
             <LocationButton
-              onLocationSelect={handlePickupChange}
+              onLocationSelect={onPickupChange}
               size="md"
               aria-label="Use current location for pickup"
             />
