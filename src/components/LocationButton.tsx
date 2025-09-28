@@ -64,7 +64,7 @@ const LocationButton: React.FC<LocationButtonProps> = ({
     } catch (err: any) {
       const errorMessage = getLocationErrorMessage(err);
       setError(errorMessage);
-      console.error('Location request failed:', err);
+      console.warn('Location request failed:', err);
     } finally {
       setIsLoading(false);
     }

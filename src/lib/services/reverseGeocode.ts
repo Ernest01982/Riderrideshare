@@ -6,13 +6,35 @@ export interface ReverseGeocodeResult {
   place_id?: string;
 }
 
+// Fallback reverse geocoding using a simple coordinate-to-address format
+const fallbackReverseGeocode = (lat: number, lng: number): ReverseGeocodeResult => {
+  // Create a more user-friendly coordinate description
+  const latDir = lat >= 0 ? 'N' : 'S';
+  const lngDir = lng >= 0 ? 'E' : 'W';
+  const description = `${Math.abs(lat).toFixed(4)}°${latDir}, ${Math.abs(lng).toFixed(4)}°${lngDir}`;
+  
+  return {
+    description: `Location: ${description}`,
+    formatted_address: description
+  };
+};
+
 export const reverseGeocode = async (lat: number, lng: number): Promise<ReverseGeocodeResult> => {
   try {
+    // Check if Supabase is properly configured
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      console.warn('Supabase not configured, using fallback reverse geocoding');
+      return fallbackReverseGeocode(lat, lng);
+    }
+
     const { data, error } = await supabase.functions.invoke('maps', {
       body: {
         op: 'reverse_geocode',
         lat,
         lng
+      },
+      headers: {
+        'Content-Type': 'application/json',
       }
     });
 
@@ -29,11 +51,7 @@ export const reverseGeocode = async (lat: number, lng: number): Promise<ReverseG
 
     throw new Error('No address found for this location');
   } catch (error) {
-    console.error('Reverse geocoding failed:', error);
-    // Fallback to basic coordinate description
-    return {
-      description: `Location: ${lat.toFixed(6)}, ${lng.toFixed(6)}`,
-      formatted_address: `${lat.toFixed(6)}, ${lng.toFixed(6)}`
-    };
+    console.warn('Reverse geocoding failed, using fallback:', error);
+    return fallbackReverseGeocode(lat, lng);
   }
 };
