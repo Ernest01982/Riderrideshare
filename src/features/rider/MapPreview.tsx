@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigation, MapPin, Clock, Route } from 'lucide-react';
+import EstimatePreview from '../../components/EstimatePreview';
 
 type Point = { description: string; lat: number; lng: number };
 
@@ -67,6 +68,16 @@ const MapPreview: React.FC<MapPreviewProps> = ({
           </div>
         )}
       </div>
+      
+      {/* Google Maps Estimate */}
+      {pickup && dropoff && (
+        <div className="p-4 border-t border-gray-100">
+          <EstimatePreview 
+            pickup={{ lat: pickup.lat, lng: pickup.lng }}
+            dropoff={{ lat: dropoff.lat, lng: dropoff.lng }}
+          />
+        </div>
+      )}
       
       {/* Trip Info */}
       {pickup && dropoff && (
