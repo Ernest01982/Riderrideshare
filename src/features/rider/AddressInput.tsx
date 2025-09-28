@@ -32,7 +32,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
   const dropoffRef = useRef<HTMLInputElement>(null);
 
   // Choose autocomplete provider based on Google Maps availability
-  const autocompleteProvider: AutocompletePort = (window as any).google?.maps?.places?.AutocompleteService 
+  const autocompleteProvider: AutocompletePort = typeof window !== 'undefined' && window.google?.maps?.places?.AutocompleteService 
     ? webPlacesAutocomplete 
     : mockAutocomplete;
 

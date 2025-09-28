@@ -1,10 +1,15 @@
 import { AutocompletePort, PlaceItem } from "../ports/autocomplete";
 
+// Check if Google Maps is loaded
+const isGoogleMapsLoaded = () => {
+  return typeof window !== 'undefined' && window.google?.maps?.places?.AutocompleteService;
+};
+
 export const webPlacesAutocomplete: AutocompletePort = {
   async suggest(input, sessionToken) {
-    const google: any = (window as any).google;
-    if (!google?.maps?.places?.AutocompleteService) return [];
+    if (!isGoogleMapsLoaded()) return [];
     
+    const google: any = (window as any).google;
     const svc = new google.maps.places.AutocompleteService();
     const predictions = await new Promise<any[]>((resolve) => {
       svc.getPlacePredictions({ 
@@ -22,10 +27,10 @@ export const webPlacesAutocomplete: AutocompletePort = {
   },
   
   async resolve(place, sessionToken) {
-    const google: any = (window as any).google;
     if (place.location) return place;
-    if (!place.placeId || !google?.maps?.places?.PlacesService) return place;
+    if (!place.placeId || !isGoogleMapsLoaded()) return place;
     
+    const google: any = (window as any).google;
     // Need a dummy map div for PlacesService in pure JS
     let div = document.getElementById('places-dummy'); 
     if (!div) { 

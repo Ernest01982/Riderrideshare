@@ -33,7 +33,10 @@ export default function EstimatePreview({
           setEtaMin(Math.round(secs / 60));
         }
       } catch (e: any) {
-        if (!cancelled) setError(e.message || "Failed to get ETA");
+        if (!cancelled) {
+          console.error('EstimatePreview error:', e);
+          setError(e.message || "Failed to get ETA");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }

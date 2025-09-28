@@ -1,9 +1,14 @@
 import { QuotePort, Quote } from "../ports/quote";
 
+// Check if Google Maps Distance Matrix is available
+const isDistanceMatrixAvailable = () => {
+  return typeof window !== 'undefined' && window.google?.maps?.DistanceMatrixService;
+};
+
 // Uses window.google.maps.DistanceMatrixService if available. Dev only!
 export const devDistanceMatrixQuote: QuotePort = {
   async getQuote({ origin, destination, rideType }) {
-    if (!(window as any).google?.maps?.DistanceMatrixService) {
+    if (!isDistanceMatrixAvailable()) {
       throw new Error('DistanceMatrixService not available. Load Google Maps JS or disable VITE_USE_DEV_DISTANCE_JS.');
     }
     

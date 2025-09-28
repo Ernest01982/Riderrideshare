@@ -31,7 +31,7 @@ const TripTracking: React.FC = () => {
         // If we have a quoteId but no tripId, confirm the quote first
         if (quoteId && !tripIdFromUrl) {
           const { data: tripData, error: confirmError } = await supabase
-            .rpc('confirm_trip_from_quote', { p_quote_id: quoteId });
+            .rpc('app.confirm_trip_from_quote', { p_quote_id: quoteId });
 
           if (confirmError) {
             if (confirmError.message?.includes('expired')) {
@@ -80,7 +80,7 @@ const TripTracking: React.FC = () => {
         if (initialTrip.status === 'requested') {
           try {
             const { data: mode, error: dispatchError } = await supabase
-              .rpc('dispatch_trip', { p_trip_id: currentTripId });
+              .rpc('app.dispatch_trip', { p_trip_id: currentTripId });
 
             if (dispatchError) {
               console.error('Dispatch error:', dispatchError);
