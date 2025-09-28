@@ -63,7 +63,11 @@ const Rider: React.FC<RiderProps> = ({ serviceType, onBack, onGoToPayment }) => 
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-center">
-            <button onClick={onBack} className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <button 
+              onClick={onBack} 
+              className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Go back to service selection"
+            >
               <ArrowLeft className="h-5 w-5 text-gray-600" />
             </button>
             <div className="flex items-center space-x-2">

@@ -67,6 +67,7 @@ const RideHistory: React.FC<RideHistoryProps> = ({ onBack }) => {
             <button
               onClick={onBack}
               className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Go back"
             >
               <ArrowLeft className="h-5 w-5 text-gray-600" />
             </button>

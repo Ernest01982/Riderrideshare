@@ -72,7 +72,11 @@ const Payment: React.FC<PaymentProps> = ({ onBack, onPaymentComplete }) => {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-center">
-            <button onClick={onBack} className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <button 
+              onClick={onBack} 
+              className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Go back"
+            >
               <ArrowLeft className="h-5 w-5 text-gray-600" />
             </button>
             <h1 className="text-xl font-semibold text-gray-900">Confirm & Pay</h1>

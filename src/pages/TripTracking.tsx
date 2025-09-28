@@ -215,8 +215,9 @@ const TripTracking: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <button
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/')} 
                 className="mr-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Go back to home"
               >
                 <ArrowLeft className="h-5 w-5 text-gray-600" />
               </button>
