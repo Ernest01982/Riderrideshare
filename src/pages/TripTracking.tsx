@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Car, Clock, MapPin, Navigation, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { subscribeTrip, subscribeTripEvents, unsubscribeChannel } from '../lib/realtime';
+import { useTripRealtime } from '../hooks/useTripRealtime';
 import type { Trip, TripEvent, DispatchMode } from '../lib/supabaseClient';
 
 const TripTracking: React.FC = () => {
@@ -11,7 +12,7 @@ const TripTracking: React.FC = () => {
   const quoteId = searchParams.get('quoteId');
   const tripIdFromUrl = searchParams.get('tripId');
 
-  // removed mocks; trip will come from DB/realtime
+  const { trip, events } = useTripRealtime(tripIdFromUrl);
   const [tripEvents, setTripEvents] = useState<TripEvent[]>([]);
   const [dispatchMode, setDispatchMode] = useState<DispatchMode | null>(null);
   const [loading, setLoading] = useState(true);
