@@ -260,7 +260,6 @@ const RideHistory: React.FC<RideHistoryProps> = ({ onBack }) => {
             <p className="text-gray-600">Your ride history will appear here after you complete your first trip.</p>
           </div>
         )}
-        )}
       </main>
     </div>
   );
