@@ -11,7 +11,7 @@ const TripTracking: React.FC = () => {
   const quoteId = searchParams.get('quoteId');
   const tripIdFromUrl = searchParams.get('tripId');
 
-  const [trip, setTrip] = useState<Trip | null>(null);
+  // removed mocks; trip will come from DB/realtime
   const [tripEvents, setTripEvents] = useState<TripEvent[]>([]);
   const [dispatchMode, setDispatchMode] = useState<DispatchMode | null>(null);
   const [loading, setLoading] = useState(true);
