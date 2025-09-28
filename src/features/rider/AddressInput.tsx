@@ -5,6 +5,7 @@ import { mockAutocomplete } from '../../lib/services/mockAutocomplete';
 import { webPlacesAutocomplete } from '../../lib/services/webPlacesAutocomplete';
 import { debounce } from '../../lib/utils/debounce';
 import { useQuote } from './QuoteContext';
+import LocationButton from '../../components/LocationButton';
 
 type Point = { description: string; lat: number; lng: number };
 
@@ -173,7 +174,8 @@ const AddressInput: React.FC<AddressInputProps> = ({
       <div className="space-y-4">
         {/* Pickup Input */}
         <div className="relative" ref={pickupRef}>
-          <div className="relative">
+          <div className="relative flex items-center space-x-2">
+            <div className="flex-1 relative">
             <Navigation className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-green-500" />
             <input
               type="text"
@@ -200,6 +202,12 @@ const AddressInput: React.FC<AddressInputProps> = ({
                 <X className="h-4 w-4 text-gray-400" />
               </button>
             )}
+            </div>
+            <LocationButton
+              onLocationSelect={handlePickupChange}
+              size="md"
+              aria-label="Use current location for pickup"
+            />
           </div>
           
           {/* Pickup Suggestions */}

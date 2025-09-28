@@ -1,6 +1,7 @@
 import React from 'react';
-import { Car, Package, MapPin, Clock, Shield, Star, History } from 'lucide-react';
+import { Car, Package, MapPin, Clock, Shield, Star, History, Navigation } from 'lucide-react';
 import { BookingType } from '../App';
+import LocationButton from './LocationButton';
 
 interface ServiceSelectionProps {
   onServiceSelect: (type: BookingType) => void;
@@ -8,6 +9,12 @@ interface ServiceSelectionProps {
 }
 
 const ServiceSelection: React.FC<ServiceSelectionProps> = ({ onServiceSelect, onViewHistory }) => {
+  const handleLocationSelect = (location: { description: string; lat: number; lng: number }) => {
+    // Store location in localStorage for use in booking flow
+    localStorage.setItem('rideflow_current_location', JSON.stringify(location));
+    console.log('Current location saved:', location);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -25,6 +32,11 @@ const ServiceSelection: React.FC<ServiceSelectionProps> = ({ onServiceSelect, on
                 <MapPin className="h-4 w-4 mr-1" />
                 Cape Town, SA
               </div>
+              <LocationButton
+                onLocationSelect={handleLocationSelect}
+                size="sm"
+                className="bg-white hover:bg-gray-50 border-gray-200"
+              />
               <button
                 onClick={onViewHistory}
                 className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"

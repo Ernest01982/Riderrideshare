@@ -21,6 +21,21 @@ export const useQuote = () => useContext(Ctx);
 export default function QuoteProvider({ children }: { children: React.ReactNode }) {
   const [state, set] = useState<State>({ rideType: 'economy', loading: false });
 
+  // Load saved location on mount
+  useEffect(() => {
+    const savedLocation = localStorage.getItem('rideflow_current_location');
+    if (savedLocation) {
+      try {
+        const location = JSON.parse(savedLocation);
+        set(s => ({ ...s, pickup: location }));
+        // Clear saved location after use
+        localStorage.removeItem('rideflow_current_location');
+      } catch (error) {
+        console.error('Failed to parse saved location:', error);
+      }
+    }
+  }, []);
+
   const provider = quoteProvider; // one source of truth for FE-only quotes
 
   async function requestQuote() {
